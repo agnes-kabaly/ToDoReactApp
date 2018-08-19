@@ -6,10 +6,7 @@ import {
     Button,
     TouchableOpacity,
     Image,
-//    Dimensions,
 } from 'react-native';
-
-//var screen = Dimensions.get('window');
 
 export default class HomeScreen extends React.Component {
     render() {
@@ -22,7 +19,7 @@ export default class HomeScreen extends React.Component {
                     <Text style={styles.text}>{text}</Text>
                 </View>
                 <View style={styles.imageView}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate("AddToDo")}>
                         <Image style={styles.image} source={require('../assets/plus4.png')}/>
                     </TouchableOpacity>
                 </View>
@@ -34,10 +31,7 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        //flexDirection: 'column',
-        //justifyContent: 'space-between',
         alignItems: 'center',
-        //width: screen.width < 470 ? screen.width - 360 : screen.width -360,
     },
     textView: {
         flex: 1,
@@ -60,7 +54,6 @@ const styles = StyleSheet.create({
         marginVertical: 420,
     },
     image: {
-        //flex: 1,
         width: 45,
         height: 45,
     },
