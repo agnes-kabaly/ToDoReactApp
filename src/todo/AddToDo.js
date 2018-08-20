@@ -2,10 +2,12 @@ import React from 'react';
 import {
     View,
     Text,
-    StyleSheet,
+    Button,
+    Keyboard,
     TextInput,
-    ScrollView,
+    StyleSheet,
     Dimensions,
+    ScrollView,
     AsyncStorage,
     TouchableOpacity,
     KeyboardAvoidingView,
@@ -16,14 +18,16 @@ import Note from '../note/Note';
 var screen = Dimensions.get('window');
 
 export default class AdToDo extends React.Component {
+    constructor(props) {
+        super(props);
 
-    state = {
-        noteArray: [],
-        noteText: '',
-    };
+        this.state = {
+            noteArray: [],
+            noteText: '',
+        };
+    }
 
     render() {
-
         let notes = this.state.noteArray.map((val, key) => {
             return <Note key={key} keyval={key} val={val} deleteMethod={() => this.deleteNote(key)}></Note>
         });
@@ -31,13 +35,16 @@ export default class AdToDo extends React.Component {
         return (
             <KeyboardAvoidingView behavior="padding" style={styles.wrapper}>
                 <LinearGradient style={styles.container} colors={['#40FF00', '#FFFF00']}>
+                    <Button title="sh" onPress={this.showData}></Button>
                     <View style={styles.cardView}>
                         <ScrollView style={styles.scrollContainer}>
                             {notes}
                         </ScrollView>
                     </View>
                     <View style={styles.footer}>
-                        <TouchableOpacity onPress={this.addNote.bind(this)} style={styles.addButton}>
+                        <TouchableOpacity
+                            onPress={this.addNote.bind(this)}
+                            style={styles.addButton}>
                             <Text style={styles.addButtonText}>+</Text>
                         </TouchableOpacity>
                         <TextInput style={styles.textInput}
@@ -47,24 +54,45 @@ export default class AdToDo extends React.Component {
                                    underlineColorAndroid="transparent">
                         </TextInput>
                     </View>
-
                 </LinearGradient>
             </KeyboardAvoidingView>
         )
     };
 
     addNote() {
+        var d = new Date();
+        let date = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() +
+            "/" + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+
+        let todoItemList = [];
+
         if (this.state.noteText) {
-            var d = new Date();
             this.state.noteArray.push({
-                'date': d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() +
-                "/" + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds(),
+                'date': date,
                 'note': this.state.noteText});
-            this.setState({noteArray: this.state.noteArray});
-            //AsyncStorage.setItem('noteArray', this.state.noteArray);
-            this.setState({noteText: ''});
+            for (var eachObjectIndex in this.state.noteArray) {
+                let todoItemOne = {
+                    note: this.state.noteArray[eachObjectIndex].note,
+                    date: this.state.noteArray[eachObjectIndex].date,
+                };
+                todoItemList.push(todoItemOne);
+            }
+            Keyboard.dismiss();
         }
+
+        this.setState({noteArray: this.state.noteArray});
+        this.setState({noteText: ''});
+
+        AsyncStorage.setItem('todoItemList', JSON.stringify(todoItemList));
     }
+
+    showData = async() => {
+        let todoItemList = await AsyncStorage.getItem('todoItemList');
+        let myTodoList = JSON.parse(todoItemList);
+        for (var eachTodoIndex in myTodoList) {
+            console.log("oneTodo: " + myTodoList[eachTodoIndex].note + " date: " + myTodoList[eachTodoIndex].date);
+        }
+    };
 
     deleteNote(key) {
         this.state.noteArray.splice(key, 1);
