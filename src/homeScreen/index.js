@@ -17,6 +17,7 @@ const HomeScreenStackNavigator = StackNavigator ({
             headerTintColor: 'white',
             headerStyle: {
                 backgroundColor: '#40FF00',
+                elevation: 0,
             },
             headerTitleStyle: {
                 color: '#ffffff',

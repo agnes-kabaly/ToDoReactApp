@@ -5,11 +5,15 @@ import {
     StyleSheet,
     TextInput,
     ScrollView,
+    Dimensions,
+    AsyncStorage,
     TouchableOpacity,
     KeyboardAvoidingView,
 } from 'react-native';
-
+import {LinearGradient} from 'expo';
 import Note from '../note/Note';
+
+var screen = Dimensions.get('window');
 
 export default class AdToDo extends React.Component {
 
@@ -26,25 +30,25 @@ export default class AdToDo extends React.Component {
 
         return (
             <KeyboardAvoidingView behavior="padding" style={styles.wrapper}>
-                <View style={styles.container}>
-
-                    <ScrollView style={styles.scrollContainer}>
-                        {notes}
-                    </ScrollView>
-
+                <LinearGradient style={styles.container} colors={['#40FF00', '#FFFF00']}>
+                    <View style={styles.cardView}>
+                        <ScrollView style={styles.scrollContainer}>
+                            {notes}
+                        </ScrollView>
+                    </View>
                     <View style={styles.footer}>
                         <TouchableOpacity onPress={this.addNote.bind(this)} style={styles.addButton}>
                             <Text style={styles.addButtonText}>+</Text>
                         </TouchableOpacity>
                         <TextInput style={styles.textInput}
                                    onChangeText={(noteText) => this.setState({noteText})} value={this.noteText}
-                                   placeholder='> note'
+                                   placeholder='> Add an item!'
                                    placeholderTextColor="#0B610B"
                                    underlineColorAndroid="transparent">
                         </TextInput>
                     </View>
 
-                </View>
+                </LinearGradient>
             </KeyboardAvoidingView>
         )
     };
@@ -57,6 +61,7 @@ export default class AdToDo extends React.Component {
                 "/" + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds(),
                 'note': this.state.noteText});
             this.setState({noteArray: this.state.noteArray});
+            //AsyncStorage.setItem('noteArray', this.state.noteArray);
             this.setState({noteText: ''});
         }
     }
@@ -73,12 +78,25 @@ const styles = StyleSheet.create ({
     },
     container: {
         flex: 1,
+        alignItems: 'center',
     },
     scrollContainer: {
         flex: 1,
         marginBottom: 100,
     },
+    cardView: {
+        flex: 1,
+        elevation: 5,
+        shadowOpacity: 1,
+        shadowRadius: 5,
+        shadowOffset: { height: 0, width: 0 },
+        backgroundColor: '#ffffff',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        width: screen.width -25,
+    },
     footer: {
+        elevation: 6,
         position: 'absolute',
         alignItems: 'center',
         bottom: 0,
