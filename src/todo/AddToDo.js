@@ -64,31 +64,20 @@ export default class AdToDo extends React.Component {
         let date = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() +
             "/" + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
 
-        let todoItemList = [];
-
         if (this.state.noteText) {
             this.state.noteArray.push({
-                'date': date,
-                'note': this.state.noteText});
-            for (var eachObjectIndex in this.state.noteArray) {
-                let todoItemOne = {
-                    note: this.state.noteArray[eachObjectIndex].note,
-                    date: this.state.noteArray[eachObjectIndex].date,
-                };
-                todoItemList.push(todoItemOne);
-            }
-            Keyboard.dismiss();
+                date: date,
+                note: this.state.noteText});
         }
+        Keyboard.dismiss();
 
-        this.setState({noteArray: this.state.noteArray});
         this.setState({noteText: ''});
-
-        AsyncStorage.setItem('todoItemList', JSON.stringify(todoItemList));
+        AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray));
     }
 
     showData = async() => {
-        let todoItemList = await AsyncStorage.getItem('todoItemList');
-        let myTodoList = JSON.parse(todoItemList);
+        let noteArray = await AsyncStorage.getItem('noteArray');
+        let myTodoList = JSON.parse(noteArray);
         for (var eachTodoIndex in myTodoList) {
             console.log("oneTodo: " + myTodoList[eachTodoIndex].note + " date: " + myTodoList[eachTodoIndex].date);
         }
