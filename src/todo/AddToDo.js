@@ -70,7 +70,8 @@ export default class AdToDo extends React.Component {
                 note: this.state.noteText});
         }
         Keyboard.dismiss();
-
+        console.log(this.state.noteArray);
+        //this.setState({noteArray: this.state.noteArray});
         this.setState({noteText: ''});
         AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray));
     }
@@ -83,9 +84,19 @@ export default class AdToDo extends React.Component {
         }
     };
 
+    async deleteAsync(key) {
+        let noteArray = await AsyncStorage.getItem('noteArray');
+        let myTodoList = JSON.parse(noteArray);
+        myTodoList.splice(key, 1);
+        AsyncStorage.setItem('noteArray', JSON.stringify(myTodoList));
+    };
+
     deleteNote(key) {
         this.state.noteArray.splice(key, 1);
         this.setState({noteArray: this.state.noteArray});
+        (async () => {
+            await this.deleteAsync(key);
+        })();
     }
 }
 
