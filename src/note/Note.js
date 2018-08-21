@@ -8,18 +8,29 @@ import {
 } from 'react-native';
 
 export default class Note extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isCompleted: false,
+        }
+    };
+
     render() {
 
         return (
             <View key={this.props.keyval} style={styles.container}>
                 <View>
-                    <TouchableOpacity>
-                        <Image style={styles.image} source={require('../assets/Button-Ok.png')}></Image>
+                    <TouchableOpacity onPress={this.doneItem}>
+                        <Image style={styles.image}
+                               source={
+                                   this.state.isCompleted ? require('../assets/checked-gray.png')
+                                   : require('../assets/Button-Ok.png')}></Image>
                     </TouchableOpacity>
                 </View>
                 <View>
-                    <Text style={styles.noteDate}>{this.props.val.date}</Text>
-                    <Text style={styles.noteText}>{this.props.val.note}</Text>
+                    <Text style={[styles.noteDate, this.state.isCompleted ? styles.completedTodo : styles.noteDate]}>{this.props.val.date}</Text>
+                    <Text style={[styles.noteText, this.state.isCompleted ? styles.completedTodo : styles.noteText]}>{this.props.val.note}</Text>
                 </View>
                 <TouchableOpacity onPress={this.props.deleteMethod} style={styles.noteDelete}>
                     <Text style={styles.noteDeleteText}>D</Text>
@@ -27,6 +38,15 @@ export default class Note extends Component {
             </View>
         )
     };
+
+doneItem = () => {
+    this.setState(prevState => {
+        return {
+            isCompleted: !prevState.isCompleted
+        }
+    })
+};
+
 }
 
 const styles = StyleSheet.create({
@@ -66,5 +86,9 @@ const styles = StyleSheet.create({
     image: {
         width: 40,
         height: 40,
+    },
+    completedTodo: {
+        color: '#848484',
+        textDecorationLine: 'line-through',
     },
 });
