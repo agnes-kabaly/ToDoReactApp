@@ -24,12 +24,15 @@ export default class AdToDo extends React.Component {
         this.state = {
             noteArray: [],
             noteText: '',
+            isCompleted: false,
         };
     }
 
     render() {
         let notes = this.state.noteArray.map((val, key) => {
-            return <Note key={key} keyval={key} val={val} deleteMethod={() => this.deleteNote(key)}></Note>
+            return <Note key={key} keyval={key} val={val}
+                         deleteMethod={() => this.deleteNote(key)}
+                         doneItem={() => this.doneItem(key)}></Note>
         });
 
         return (
@@ -67,7 +70,8 @@ export default class AdToDo extends React.Component {
         if (this.state.noteText) {
             this.state.noteArray.push({
                 date: date,
-                note: this.state.noteText});
+                note: this.state.noteText,
+                isCompleted: this.state.isCompleted});
         }
         Keyboard.dismiss();
         console.log(this.state.noteArray);
@@ -80,7 +84,7 @@ export default class AdToDo extends React.Component {
         let noteArray = await AsyncStorage.getItem('noteArray');
         let myTodoList = JSON.parse(noteArray);
         for (var eachTodoIndex in myTodoList) {
-            console.log("oneTodo: " + myTodoList[eachTodoIndex].note + " date: " + myTodoList[eachTodoIndex].date);
+            console.log("oneTodo: " + myTodoList[eachTodoIndex].note + " date: " + myTodoList[eachTodoIndex].date + myTodoList[eachTodoIndex].isCompleted);
         }
     };
 
@@ -98,6 +102,14 @@ export default class AdToDo extends React.Component {
             await this.deleteAsync(key);
         })();
     }
+
+    doneItem(key) {
+        this.state.noteArray[key].isCompleted = !this.state.noteArray[key].isCompleted;
+        this.setState({noteArray: this.state.noteArray});
+    };
+
+    //assinc módosítás mentése
+
 }
 
 const styles = StyleSheet.create ({
