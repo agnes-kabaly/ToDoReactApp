@@ -103,12 +103,21 @@ export default class AdToDo extends React.Component {
         })();
     }
 
+    async modifyIsCompleted(key) {
+        let noteArray = await AsyncStorage.getItem('noteArray');
+        let myTodoList = JSON.parse(noteArray);
+        myTodoList[key].isCompleted = !myTodoList[key].isCompleted;
+        AsyncStorage.setItem('noteArray', JSON.stringify(myTodoList));
+    }
+
     doneItem(key) {
         this.state.noteArray[key].isCompleted = !this.state.noteArray[key].isCompleted;
         this.setState({noteArray: this.state.noteArray});
+        (async () => {
+            await this.modifyIsCompleted(key);
+        })();
     };
 
-    //assinc módosítás mentése
 
 }
 
