@@ -38,7 +38,7 @@ export default class AdToDo extends React.Component {
         return (
             <KeyboardAvoidingView behavior="padding" style={styles.wrapper}>
                 <LinearGradient style={styles.container} colors={['#40FF00', '#FFFF00']}>
-                    <Button title="sh" onPress={this.showData}></Button>
+                    <Button title="sh" onPress={() => this.showData()}></Button>
                     <View style={styles.cardView}>
                         <ScrollView style={styles.scrollContainer}>
                             {notes}
@@ -80,19 +80,16 @@ export default class AdToDo extends React.Component {
         AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray));
     }
 
-    showData = async() => {
-        let noteArray = await AsyncStorage.getItem('noteArray');
-        let myTodoList = JSON.parse(noteArray);
-        for (var eachTodoIndex in myTodoList) {
-            console.log("oneTodo: " + myTodoList[eachTodoIndex].note + " date: " + myTodoList[eachTodoIndex].date + myTodoList[eachTodoIndex].isCompleted);
-        }
+    showData() {
+        for (var eachTodoIndex in this.state.noteArray) {
+            console.log("oneTodo: " + this.state.noteArray[eachTodoIndex].note
+                + " date: " + this.state.noteArray[eachTodoIndex].date
+                + this.state.noteArray[eachTodoIndex].isCompleted);
+        };
     };
 
     async deleteAsync(key) {
-        let noteArray = await AsyncStorage.getItem('noteArray');
-        let myTodoList = JSON.parse(noteArray);
-        myTodoList.splice(key, 1);
-        AsyncStorage.setItem('noteArray', JSON.stringify(myTodoList));
+        AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray));
     };
 
     deleteNote(key) {
@@ -104,10 +101,7 @@ export default class AdToDo extends React.Component {
     }
 
     async modifyIsCompleted(key) {
-        let noteArray = await AsyncStorage.getItem('noteArray');
-        let myTodoList = JSON.parse(noteArray);
-        myTodoList[key].isCompleted = !myTodoList[key].isCompleted;
-        AsyncStorage.setItem('noteArray', JSON.stringify(myTodoList));
+        AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray));
     }
 
     doneItem(key) {
@@ -117,7 +111,6 @@ export default class AdToDo extends React.Component {
             await this.modifyIsCompleted(key);
         })();
     };
-
 
 }
 
