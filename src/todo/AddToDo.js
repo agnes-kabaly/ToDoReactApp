@@ -28,6 +28,16 @@ export default class AdToDo extends React.Component {
         };
     }
 
+    componentDidMount = async() => {
+        let noteArray = await AsyncStorage.getItem('noteArray');
+        let myTodoList = JSON.parse(noteArray);
+        if (myTodoList != []){
+            this.setState({
+                noteArray: myTodoList
+            });
+        };
+    };
+
     render() {
         let notes = this.state.noteArray.map((val, key) => {
             return <Note key={key} keyval={key} val={val}
@@ -80,7 +90,16 @@ export default class AdToDo extends React.Component {
         AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray));
     }
 
-    showData() {
+    async refreshAsync() {
+        AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray));
+    };
+
+    showData = async() => {
+        let noteArray = await AsyncStorage.getItem('noteArray');
+        let myTodoList = JSON.parse(noteArray);
+        this.setState({
+            noteArray: myTodoList
+        });
         for (var eachTodoIndex in this.state.noteArray) {
             console.log("oneTodo: " + this.state.noteArray[eachTodoIndex].note
                 + " date: " + this.state.noteArray[eachTodoIndex].date
@@ -88,15 +107,11 @@ export default class AdToDo extends React.Component {
         };
     };
 
-    async refreshAsync(key) {
-        AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray));
-    };
-
     deleteNote(key) {
         this.state.noteArray.splice(key, 1);
         this.setState({noteArray: this.state.noteArray});
         (async () => {
-            await this.refreshAsync(key);
+            await this.refreshAsync();
         })();
     }
 
@@ -104,7 +119,7 @@ export default class AdToDo extends React.Component {
         this.state.noteArray[key].isCompleted = !this.state.noteArray[key].isCompleted;
         this.setState({noteArray: this.state.noteArray});
         (async () => {
-            await this.refreshAsync(key);
+            await this.refreshAsync();
         })();
     };
 
