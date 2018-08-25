@@ -88,7 +88,7 @@ export default class AdToDo extends React.Component {
         };
     };
 
-    async deleteAsync(key) {
+    async refreshAsync(key) {
         AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray));
     };
 
@@ -96,19 +96,15 @@ export default class AdToDo extends React.Component {
         this.state.noteArray.splice(key, 1);
         this.setState({noteArray: this.state.noteArray});
         (async () => {
-            await this.deleteAsync(key);
+            await this.refreshAsync(key);
         })();
-    }
-
-    async modifyIsCompleted(key) {
-        AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray));
     }
 
     doneItem(key) {
         this.state.noteArray[key].isCompleted = !this.state.noteArray[key].isCompleted;
         this.setState({noteArray: this.state.noteArray});
         (async () => {
-            await this.modifyIsCompleted(key);
+            await this.refreshAsync(key);
         })();
     };
 
