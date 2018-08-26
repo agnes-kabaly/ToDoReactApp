@@ -4,10 +4,15 @@ import {
     Text,
     View,
     Image,
+    Alert,
     TouchableOpacity
 } from 'react-native';
 
 export default class Note extends Component {
+    constructor(props) {
+        super(props);
+    }
+
     render() {
         return (
             <View key={this.props.keyval} style={styles.container}>
@@ -23,7 +28,20 @@ export default class Note extends Component {
                     <Text style={[styles.noteDate, this.props.val.isCompleted ? styles.completedTodo : styles.noteDate]}>{this.props.val.date}</Text>
                     <Text style={[styles.noteText, this.props.val.isCompleted ? styles.completedTodo : styles.noteText]}>{this.props.val.note}</Text>
                 </View>
-                <TouchableOpacity onPress={this.props.deleteMethod} style={styles.noteDelete}>
+                <TouchableOpacity
+                    onPress={() => {
+                        Alert.alert('Alert', 'Are you sure you want to delete?',
+                            [
+                                {text: 'No', onPress: () => console.log('Cancel Pressed'), styles: 'cancel'},
+                                {
+                                    text: 'Yes', onPress: () => {this.props.deleteMethod(this.props.deleteMethod)}
+                                }
+                            ],
+                            {cancelable: true}
+                        )
+                    }
+                    }
+                    style={styles.noteDelete}>
                     <Text style={styles.noteDeleteText}>D</Text>
                 </TouchableOpacity>
             </View>
