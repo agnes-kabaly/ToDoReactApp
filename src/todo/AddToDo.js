@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import {LinearGradient} from 'expo';
 import Note from '../note/Note';
+import EditModal from '../note/EditModal';
 
 var screen = Dimensions.get('window');
 
@@ -42,7 +43,8 @@ export default class AdToDo extends React.Component {
         let notes = this.state.noteArray.map((val, key) => {
             return <Note key={key} keyval={key} val={val}
                          deleteMethod={() => this.deleteNote(key)}
-                         doneItem={() => this.doneItem(key)}></Note>
+                         doneItem={() => this.doneItem(key)}
+                         editing={() => this.refs.editModal.showEditModal(this.state.noteArray[key])}></Note>
         });
 
         return (
@@ -66,6 +68,11 @@ export default class AdToDo extends React.Component {
                                    placeholderTextColor="#0B610B"
                                    underlineColorAndroid="transparent">
                         </TextInput>
+
+                        <EditModal ref={'editModal'}>
+
+
+                        </EditModal>
                     </View>
                 </LinearGradient>
             </KeyboardAvoidingView>

@@ -29,7 +29,7 @@ export default class Note extends Component {
                     <Text style={[styles.noteText, this.props.val.isCompleted ? styles.completedTodo : styles.noteText]}>{this.props.val.note}</Text>
                 </View>
                 <View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={this.props.editing}>
                     <Image style={this.props.val.note.length > 16 ? styles.imageEditLong : styles.imageEditShort} source={require('../assets/edit.png')}></Image>
                 </TouchableOpacity>
                 </View>
