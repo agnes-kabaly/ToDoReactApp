@@ -35,7 +35,7 @@ export default class Note extends Component {
                 </View>
                 <TouchableOpacity
                     onPress={() => {
-                        Alert.alert('Alert', 'Are you sure you want to delete?',
+                        Alert.alert('Alert', 'Are you sure you want to delete? \n - ' + this.props.val.note,
                             [
                                 {text: 'No', onPress: () => console.log('Cancel Pressed'), styles: 'cancel'},
                                 {

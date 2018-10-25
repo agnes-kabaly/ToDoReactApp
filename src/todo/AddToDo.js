@@ -4,6 +4,7 @@ import {
     Text,
     Button,
     Keyboard,
+    Platform,
     TextInput,
     StyleSheet,
     Dimensions,
@@ -44,11 +45,13 @@ export default class AdToDo extends React.Component {
             return <Note key={key} keyval={key} val={val}
                          deleteMethod={() => this.deleteNote(key)}
                          doneItem={() => this.doneItem(key)}
-                         editing={() => this.refs.editModal.showEditModal(this.state.noteArray[key])}></Note>
+                         editing={() => this.refs.editModal.showEditModal(this.state.noteArray[key], key)}></Note>
         });
 
+        const keyboardVerticalOffset = Platform.OS === 'android' ? 40 : 0;
+
         return (
-            <KeyboardAvoidingView behavior="padding" style={styles.wrapper}>
+            <KeyboardAvoidingView behavior="padding" style={styles.wrapper} keyboardVerticalOffset={keyboardVerticalOffset}>
                 <LinearGradient style={styles.container} colors={['#40FF00', '#FFFF00']}>
                     <Button title="sh" onPress={() => this.showData()}></Button>
                     <View style={styles.cardView}>
@@ -63,13 +66,14 @@ export default class AdToDo extends React.Component {
                             <Text style={styles.addButtonText}>+</Text>
                         </TouchableOpacity>
                         <TextInput style={styles.textInput}
+                                   ref={input => this.myInput = input}
                                    onChangeText={(noteText) => this.setState({noteText})} value={this.noteText}
                                    placeholder='> Add an item!'
                                    placeholderTextColor="#0B610B"
                                    underlineColorAndroid="transparent">
                         </TextInput>
 
-                        <EditModal ref={'editModal'}>
+                        <EditModal ref={'editModal'} callback={this.editHandler}>
 
 
                         </EditModal>
@@ -91,9 +95,10 @@ export default class AdToDo extends React.Component {
                 isCompleted: this.state.isCompleted});
         }
         Keyboard.dismiss();
-        console.log(this.state.noteArray);
+        //console.log(this.state.noteArray);
         //this.setState({noteArray: this.state.noteArray});
         this.setState({noteText: ''});
+        this.myInput.clear();
         AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray));
     }
 
@@ -130,6 +135,21 @@ export default class AdToDo extends React.Component {
         })();
     };
 
+    editTodo(key, newText) {
+        this.state.noteArray[key].note = newText;
+        this.setState({noteArray: this.state.noteArray});
+        (async () => {
+            await this.refreshAsync();
+        })();
+    }
+
+    editHandler = (noteFromEdit, editKey) => {
+        this.setState({
+            noteText: noteFromEdit,
+        });
+        this.editTodo(editKey, noteFromEdit);
+    };
+
 }
 
 const styles = StyleSheet.create ({
@@ -142,7 +162,7 @@ const styles = StyleSheet.create ({
     },
     scrollContainer: {
         flex: 1,
-        marginBottom: 100,
+        marginBottom: 128,
     },
     cardView: {
         flex: 1,

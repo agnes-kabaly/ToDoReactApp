@@ -13,21 +13,21 @@ export default class EditModal extends Component {
     constructor() {
         super();
         this.state = {
+            key: '',
             noteText: '',
         };
     }
 
-    showEditModal = (editingTodo) => {
+    showEditModal = (editingTodo, noteKey) => {
         this.setState({
-            key: editingTodo,
+            key: noteKey,
             noteText: editingTodo.note,
         });
         this.refs.myModal.open();
-        console.log('megnyitotta2');
     };
 
     onSavePressed() {
-
+        this.props.callback(this.state.noteText, this.state.key);
         this.refs.myModal.close();
     }
 
@@ -40,7 +40,7 @@ export default class EditModal extends Component {
                 position='top'
                 backdrop={true}
                 onClosed={() => {
-                    console.log("Bezárt.");
+                    console.log("Exit with note: " + this.state.noteText + " and key: " + this.state.key);
                 }}
             >
                 <View style={styles.rowView}>
